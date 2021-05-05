@@ -1,5 +1,5 @@
 # Load the lib 
-
+library(ggplot2)
 
 # Load the dataset
 test <- read.csv('/Users/aneruthmohanasundaram/Documents/GitHub/R-Basics/Machine Learning/Datasets/Test_set_values.csv')
@@ -8,6 +8,17 @@ labels <- read.csv('/Users/aneruthmohanasundaram/Documents/GitHub/R-Basics/Machi
 
 # Analyzing the dataset
 dim(train)  # To check the shape of our dataset
+
+
+# Analyzing the dataset
+tb <- with(train,table(extraction_type_class))
+lab <- with(labels,table(status_group))
+
+# Analyzing extraction_type_class
+ggplot(as.data.frame(tb), aes(factor(extraction_type_class), Freq)) + geom_col(position = 'dodge')
+
+# Analyzing labels
+ggplot(as.data.frame(lab), aes(factor(status_group), Freq)) + geom_col(position = 'dodge')
 
 # To get the unique values of recorded_by
 unique(train['recorded_by'])
