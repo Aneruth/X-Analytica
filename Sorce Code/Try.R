@@ -1,5 +1,6 @@
 # Load the lib 
 library(ggplot2)
+library(dplyr)
 
 # Load the dataset
 test <- read.csv('/Users/aneruthmohanasundaram/Documents/GitHub/R-Basics/Machine Learning/Datasets/Test_set_values.csv')
@@ -8,6 +9,8 @@ labels <- read.csv('/Users/aneruthmohanasundaram/Documents/GitHub/R-Basics/Machi
 
 # Analyzing the dataset
 dim(train)  # To check the shape of our dataset
+
+# Describing the dataset
 
 
 # Analyzing the dataset
@@ -49,6 +52,7 @@ View(data.frame(train$extraction_type,train$extraction_type_group,train$extracti
 # We can say that three column have a common value and hence we can remove one column
 train <- train[ , !names(train) %in% c('extraction_type_group')]
 
+######################################## Get back to it later
 # Grouping management and management_group
 View(data.frame(train$management,train$management_group))
 # We can't drop anything from above mentioned columns as they posses different values
@@ -70,7 +74,7 @@ dim(train)
 # Comparing the water_quality and quality_group
 View(train[c('water_quality','quality_group')])
 # Since we can infer that they both have a close relation so we can eliminate either of the column
-train <- train[ , !names(train) %in% c('water_quality')]
+train <- train[ , !names(train) %in% c('quality_group')]
 dim(train)
 
 # Comparing the quantity and quantity_group
@@ -83,4 +87,14 @@ dim(train)
 View(train[c('source_type','source','source_class')])
 # By comparing we can say that source_type and source are same so we can drop either of it but source_class defines type of the water source
 train <- train[ , !names(train) %in% c('source_type')]
+dim(train)
+
+# Comparing the source_type, source and source_class
+View(train[c('waterpoint_type','waterpoint_type_group')])
+# By comparing we can say that source_type and source are same so we can drop either of it but source_class defines type of the water source
+train <- train[ , !names(train) %in% c('waterpoint_type_group')]
+dim(train)
+
+# drop columns
+train <- train[ , !names(train) %in% c('id','wpt_name','num_private','longitude','latitude','lga','ward','amount_tsh','subvillage','region','gps_height')]
 dim(train)
