@@ -96,5 +96,68 @@ train <- train[ , !names(train) %in% c('waterpoint_type_group')]
 dim(train)
 
 # drop columns
-train <- train[ , !names(train) %in% c('id','wpt_name','num_private','longitude','latitude','lga','ward','amount_tsh','subvillage','region','gps_height')]
+train <- train[ , !names(train) %in% c('id','wpt_name','num_private','longitude','latitude','lga','ward','amount_tsh','subvillage','region','gps_height','funder','installer')]
 dim(train)
+
+# Converting the date to days
+train$date_recorded = as.numeric(as.Date(Sys.Date()) - as.Date(c(train$date_recorded)))
+View(train)
+
+# Replacing all 0 with NA
+train[train == 0]  <- NA
+
+# Considering the mean values for NA in population column
+train$population <- ifelse(is.na(train$population), mean(train$population, na.rm=TRUE), train$population)
+
+# Considering the mean values for NA in Construction Year column
+train$construction_year <- ifelse(is.na(train$construction_year), mean(train$construction_year, na.rm=TRUE), train$construction_year)
+
+# Converting the categorical value of to top 4 categorical values 
+clean_dataset <- function(x){
+  x$basin <- ifelse(x$basin == 'Lake Victoria','lake victoria',x$basin)
+  x$basin <- ifelse(x$basin == 'Pangani','pangani',x$basin)
+  x$basin <- ifelse(x$basin == 'Rufiji','rufiji',x$basin)
+  x$basin <- ifelse(x$basin == 'Internal','internal',x$basin)
+  x$basin <- ifelse(x$basin != 'lake victoria' & x$basin != 'pangani' & x$basin != 'rufiji' & x$basin != 'internal' ,'other_basin',x$basin)
+  
+  # Considering the scheme_management column
+  x$scheme_management <- ifelse(x$scheme_management == 'VWC','vwc',x$scheme_management)
+  x$scheme_management <- ifelse(x$scheme_management == 'WUG','wug',x$scheme_management)
+  x$scheme_management <- ifelse(x$scheme_management == 'Water authority','water_auth',x$scheme_management)
+  x$scheme_management <- ifelse(x$scheme_management == 'Water Board','water_board',x$scheme_management)
+  x$scheme_management <- ifelse(x$scheme_management != 'vwc' & x$scheme_management != 'wug' & x$scheme_management != 'water_auth' & x$scheme_management != 'water_board' ,'other_schmgt',x$scheme_management)
+  
+  # Considering the extraction_type column
+  x$extraction_type <- ifelse(x$extraction_type != 'gravity' & x$extraction_type != 'nira/tanira' ,'other_exttype',x$extraction_type)
+  
+  # Considering the extraction_type_class column
+  x$extraction_type_class <- ifelse(x$extraction_type_class != 'gravity' & x$extraction_type_class != 'handpump' ,'other_extclass',x$extraction_type_class)
+  
+  # Considering the management column
+  x$management <- ifelse(x$management != 'vwc' & x$management != 'wug' & x$management != 'wua' & x$management != 'water board','other_mgt',x$management)
+  
+  # Considering the management_group column
+  x$management_group <- ifelse(x$management_group != 'user-group' & x$management_group != 'commercial','other_mgtgroup',x$management_group)
+  
+  # Considering the payment_type column
+  x$payment_type <- ifelse(x$payment_type != 'per bucket' & x$payment_type != 'never pay' & x$payment_type != 'monthly','other_payemt',x$payment_type)
+  
+  # Considering the water_quality column
+  x$water_quality <- ifelse(x$water_quality != 'soft' & x$water_quality != 'salty','other_waterqual',x$water_quality)
+  
+  # Considering the quantity column
+  x$quantity <- ifelse(x$quantity != 'insufficient' & x$quantity != 'dry' & x$quantity != 'enough','other_quantity',x$quantity)
+  
+  # Considering the source column
+  x$source <- ifelse(x$source != 'shallow well' & x$source != 'spring' & x$source != 'machine dbh' & x$source != 'river','other_source',x$source)
+  
+  # Considering the source_class column and converting unknown to other_sourceClass
+  x$source_class <- ifelse(x$source_class == 'unknown','other_sourceClass',x$source_class)
+  
+  # Considering the waterpoint_type column
+  x$waterpoint_type <- ifelse(x$waterpoint_type != 'communal standpipe' & x$waterpoint_type != 'hand pump','other_watertype',x$waterpoint_type)
+  return(x) # Returns the dataset
+}
+
+cleaned_train <- clean_dataset(train)
+View(cleaned_train)
