@@ -1,7 +1,7 @@
 # Load the lib 
 library(ggplot2)
 library(dplyr)
-
+library(caret) # Package to perform one hot encoding
 
 # Load the dataset
 test <- read.csv('/Users/aneruthmohanasundaram/Documents/GitHub/R-Basics/Machine Learning/Datasets/Test_set_values.csv')
@@ -220,13 +220,5 @@ View(cleaned_test)
 
 
 # Performing one hot encoding
-
-
-
-###################################################### TESTING ###################################################################
-
-
-###################################################### TESTING #################################################################
-
-
-
+train_1h <- data.frame(predict(dummyVars(" ~ .", data = cleaned_train, fullRank = T), newdata = cleaned_train))
+test_1h <- data.frame(predict(dummyVars(" ~ .", data = cleaned_test, fullRank = T), newdata = cleaned_test))
