@@ -222,3 +222,5 @@ View(cleaned_test)
 # Performing one hot encoding
 train_1h <- data.frame(predict(dummyVars(" ~ .", data = cleaned_train, fullRank = T), newdata = cleaned_train))
 test_1h <- data.frame(predict(dummyVars(" ~ .", data = cleaned_test, fullRank = T), newdata = cleaned_test))
+View(train_1h)
+View(test_1h)
