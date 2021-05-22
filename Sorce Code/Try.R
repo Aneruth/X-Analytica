@@ -485,3 +485,8 @@ cm
 acc_nb <- sum(diag(cm)/sum(cm))
 confusionMatrix(cm)
 plot(y_pred, data_test$status_group, main="Naive Bayes")
+
+#######################
+# Deep Neural Network #
+#######################
+
