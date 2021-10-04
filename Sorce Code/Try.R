@@ -29,9 +29,9 @@ lab <- with(labels,table(status_group))
 ggplot(as.data.frame(tb), aes(factor(extraction_type_class), Freq)) + geom_col(position = 'dodge')
 
 # Analyzing labels
-ggplot(data=train_1h, aes(x=status_group)) + 
-  geom_bar(aes(y = (..count..)/sum(..count..)), fill=brewer.pal(3, "Set1"), alpha = 1/2) + 
-  geom_text(aes(y = ((..count..)/sum(..count..)), label = scales::percent((..count..)/sum(..count..))), 
+ggplot(data=dummy, aes(x=status_group)) +
+  geom_bar(aes(y = (..count..)/sum(..count..)), fill=brewer.pal(3, "Set1"), alpha = 1/2) +
+  geom_text(aes(y = ((..count..)/sum(..count..)), label = scales::percent((..count..)/sum(..count..))),
             stat = "count", vjust = -0.25) +
   scale_y_continuous(labels = percent) +
   theme(axis.text.y=element_blank(), axis.ticks=element_blank(), axis.title.y=element_blank()) +
@@ -431,9 +431,14 @@ for (features_per_tree in feature_values)
   confusion_matrix <- table(Y_hat,Y)
   confusion_matrix
   
+  # From confusion matrix we can calculate the accuracy by summing the daignals 
+  # and dividing it by sum of the confusion matrix
   accuracy = (confusion_matrix[1,1]+confusion_matrix[2,2])/sum(confusion_matrix)
+  
+  # We find the number of incorrect calculations
   misclassification_rate = 1 - accuracy
   accuracy_vec <- cbind(accuracy_vec,accuracy)
+  
   # print(paste("[INFO] - Misclassification rate -",features_per_tree,"features :",misclassification_rate))
   print(paste("[INFO] - Accuracy rate -",accuracy_vec,"Misclassification rate :",misclassification_rate))
 }
